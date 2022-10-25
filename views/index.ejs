@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Messages</title>
+</head>
+<body>
+
+    <div class="container">
+        <div class="shadow-lg pt-2 mb-5 bg-body rouned card">
+            <div class="card-body">
+                <center>
+                    <h4>Suscribciones </h4>
+                    <div class="row">
+                        <form action="/topic" onsubmit="return false">
+                            <div class="mb-3 col-md-6">
+                                <label for="exampleInputEmail1" class="form-label">Topic</label>
+                                <input type="text" class="form-control" id="topic" name="topic" value="flespi/message/gw/devices/4662532" >
+                                <div  class="form-text">Ingrese el topic al cual se sucribirá</div>
+                            </div>
+                            <button type="submit" class=" btn btn-info btn-lg"> <i class="bi bi-save"></i>Enviar</button>
+                        </form>
+                    </div>
+                </center>
+            </div >
+        </div>
+        <div class="shadow-lg pt-2 mb-5 bg-body rouned card">
+            <div id="result" class="card-body">
+                <div style="display:none" id="spinner" class="text-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <ul id="messages" class="list-group list-group-flush"></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script src="https://cdn.socket.io/4.4.0/socket.io.min.js" integrity="sha384-1fOn6VtTq3PWwfsOrk45LnYcGosJwzMHv+Xh/Jx5303FVOXzEnw0EpLv30mtjmlj" crossorigin="anonymous"></script>
+    <script>
+        const socket = io()
+        const messages = document.getElementById('messages');
+        const spinner  = $("#spinner");
+        $('form').submit(function(e){
+            e.preventDefault();
+            let data = $('#topic').val();
+            console.log(data)
+            socket.emit('suscribe', data);
+            $("#messages").html("");
+            spinner.show()
+        })
+
+        //listen the message from server.js
+        socket.on('ioMessage', function(msg) {
+            if(spinner.is(':visible')){
+                spinner.hide();
+            }
+            let item = document.createElement('li');
+            item.className = "list-group-item"
+            item.textContent = msg;
+            //messages.appendChild(item);
+            messages.prepend(item);
+            //window.scrollTo(0, document.body.scrollHeight);
+        });
+    </script>
+</body>
+</html>
