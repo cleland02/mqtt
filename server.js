@@ -8,7 +8,7 @@ const routes = require('./routes');
 //mqtt
 const options={
     port:'1883',
-    clientId:"123123",
+    clientId:Math.floor(Math.random() * 10000),
     username:"FlespiToken JBHYSc5OysxtU0wUsIt7Lfp6FHibONhneO9WQ4yckUu5IQP0m6VY9bUDG1ElCKwE",
     password:"",
     clean:true};
